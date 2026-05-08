@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>においたんけん / Nioi Tanken — Smell Expedition</title>
+<meta name="description" content="4〜8さい むけ。おうちの『におい』を みつけて、においの にわを そだてよう。Smell-journal play for kids 4-8 — find smells around the house and grow a smell garden.">
+<meta name="theme-color" content="#fde7c4">
+<meta property="og:title" content="においたんけん / Nioi Tanken">
+<meta property="og:description" content="おうちの においを みつけて にわを そだてよう。Smell expedition for kids 4-8.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pndshch.github.io/nioi-tanken/">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg-1: #fef6e7;
+  --bg-2: #ffe7d6;
+  --bg-3: #ffd8e8;
+  --ink: #3a2a18;
+  --ink-soft: #6b5340;
+  --paper: #fffaf2;
+  --line: #e7d4b8;
+  --accent: #ff7a5a;
+  --accent-2: #f4a261;
+  --shadow: 0 6px 20px rgba(120, 80, 40, 0.10);
+  --radius: 18px;
+}
+html, body {
+  height: 100%;
+}
+body {
+  font-family: 'Hiragino Maru Gothic ProN', 'Yu Gothic', 'Helvetica Neue', system-ui, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 20% 0%, #ffe2d2 0%, transparent 55%),
+    radial-gradient(circle at 90% 30%, #ffe9f3 0%, transparent 50%),
+    radial-gradient(circle at 50% 100%, #fff3d6 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  background-attachment: fixed;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+a, button { font: inherit; color: inherit; }
+button { border: none; background: none; cursor: pointer; }
+
+/* ── Layout ── */
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 14px 14px 100px;
+  position: relative;
+}
+
+/* ── Lang switch ── */
+.lang-switch {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+  box-shadow: var(--shadow);
+  z-index: 5;
+}
+.lang-btn {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: var(--ink-soft);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+.lang-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Header ── */
+.head {
+  text-align: center;
+  padding: 28px 0 10px;
+}
+.title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: 0.5px;
+}
+.nose {
+  display: inline-block;
+  font-size: 28px;
+  filter: drop-shadow(0 2px 0 #d28a5a);
+  animation: sniff 2.4s ease-in-out infinite;
+  transform-origin: 50% 80%;
+}
+@keyframes sniff {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  35% { transform: translateY(-2px) rotate(-3deg); }
+  55% { transform: translateY(0) rotate(2deg); }
+  75% { transform: translateY(-1px) rotate(-1deg); }
+}
+.subtitle {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  letter-spacing: 0.3px;
+}
+
+/* ── Today's mission ── */
+.mission {
+  margin: 18px 0 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.mission::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 110% 30%, rgba(255, 122, 90, 0.18), transparent 65%);
+  pointer-events: none;
+}
+.mission-emoji {
+  font-size: 36px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 0 rgba(0,0,0,0.08));
+}
+.mission-text { flex: 1; line-height: 1.4; min-width: 0; }
+.mission-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.mission-name {
+  font-size: 18px;
+  font-weight: 800;
+  margin-top: 2px;
+}
+.mission-hint {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+/* ── Garden ── */
+.garden-wrap {
+  margin-bottom: 18px;
+}
+.garden-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 4px 4px 8px;
+}
+.garden-count {
+  font-size: 12px;
+  color: var(--ink);
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: none;
+}
+.garden {
+  position: relative;
+  height: 220px;
+  background:
+    radial-gradient(ellipse at 50% 110%, rgba(110, 180, 90, 0.25), transparent 70%),
+    linear-gradient(180deg, #b9e0a8 0%, #88c876 100%);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow), inset 0 -8px 14px rgba(0,0,0,0.06);
+  cursor: default;
+}
+.garden::before {
+  /* sun */
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  width: 38px;
+  height: 38px;
+  background: radial-gradient(circle, #fff39a 0%, #ffd970 70%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(0.5px);
+}
+.garden::after {
+  /* horizon hill */
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  width: 120%;
+  height: 60px;
+  background: radial-gradient(ellipse at 50% 100%, #6fa85e 0%, #6fa85e 60%, transparent 100%);
+  opacity: 0.55;
+}
+.flower {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  transform-origin: 50% 100%;
+  animation: bloom 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  pointer-events: auto;
+  cursor: pointer;
+}
+@keyframes bloom {
+  0%   { transform: translate(-50%, -100%) scale(0) rotate(-10deg); opacity: 0; }
+  60%  { transform: translate(-50%, -100%) scale(1.15) rotate(4deg); opacity: 1; }
+  100% { transform: translate(-50%, -100%) scale(1) rotate(0); }
+}
+.flower:active { transform: translate(-50%, -100%) scale(1.1); }
+.flower svg { display: block; width: 100%; height: 100%; }
+.empty-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 80, 30, 0.3);
+  pointer-events: none;
+  text-align: center;
+  padding: 0 24px;
+  line-height: 1.5;
+}
+.empty-msg.hide { display: none; }
+
+/* ── Smell grid ── */
+.section-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  margin: 22px 4px 10px;
+}
+.smells {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.smell {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 4px 8px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+  min-height: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.smell:hover { border-color: var(--accent); transform: translateY(-2px); }
+.smell:active { transform: scale(0.97); }
+.smell.found {
+  background: linear-gradient(135deg, #fff8e3, #ffe9d2);
+  border-color: var(--accent-2);
+  box-shadow: 0 3px 0 #e8c28a;
+}
+.smell.quest {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(255, 122, 90, 0.3), 0 0 12px rgba(255, 122, 90, 0.3);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(255, 122, 90, 0.3), 0 0 8px rgba(255, 122, 90, 0.25); }
+  50% { box-shadow: 0 0 0 3px rgba(255, 122, 90, 0.5), 0 0 18px rgba(255, 122, 90, 0.45); }
+}
+.smell-emoji { font-size: 26px; line-height: 1; filter: drop-shadow(0 1px 0 rgba(0,0,0,0.08)); }
+.smell-name {
+  font-size: 11px;
+  font-weight: 800;
+  margin-top: 4px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.found-tick {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #6db86d;
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+/* ── Knowledge popup ── */
+.knowledge {
+  margin-top: 18px;
+  background: linear-gradient(135deg, #fff7e8, #ffeacf);
+  border: 1px dashed var(--accent-2);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink);
+  display: none;
+}
+.knowledge.show { display: block; animation: fadeIn 0.5s ease both; }
+.knowledge-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Reset bar ── */
+.foot {
+  margin-top: 26px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.reset-btn {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.reset-btn:active { background: #f4e6cf; }
+
+/* ── Modal ── */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(60, 30, 10, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.modal-bg.show { opacity: 1; pointer-events: auto; }
+.modal {
+  background: var(--paper);
+  border-radius: 22px 22px 0 0;
+  padding: 22px 18px 30px;
+  width: 100%;
+  max-width: 480px;
+  transform: translateY(100%);
+  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.18);
+}
+.modal-bg.show .modal { transform: translateY(0); }
+.modal-handle {
+  width: 42px;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  margin: 0 auto 14px;
+}
+.modal-emoji {
+  text-align: center;
+  font-size: 56px;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 3px 0 rgba(0,0,0,0.1));
+}
+.modal-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+.modal-q {
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.room {
+  padding: 14px 4px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  transition: background 0.12s, transform 0.12s;
+}
+.room:active { transform: scale(0.96); background: #ffe2c8; }
+.room-icon { font-size: 24px; line-height: 1; }
+.modal-skip {
+  display: block;
+  margin: 14px auto 0;
+  padding: 10px 22px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  border-radius: 999px;
+  background: transparent;
+  border: 1px dashed var(--line);
+}
+
+/* ── Celebrate flash ── */
+.celebrate {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 200;
+  opacity: 0;
+}
+.celebrate.show { animation: celebrate 1.2s ease both; }
+@keyframes celebrate {
+  0% { opacity: 0; transform: scale(0.5); }
+  20% { opacity: 1; transform: scale(1.1); }
+  60% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+.celebrate-text {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent);
+  text-shadow: 0 4px 0 rgba(255,255,255,0.8), 0 8px 20px rgba(255, 122, 90, 0.4);
+  letter-spacing: 1px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 360px) {
+  .smell-name { font-size: 10px; }
+  .smell-emoji { font-size: 22px; }
+  .smell { min-height: 70px; }
+}
+@media (min-width: 480px) {
+  .garden { height: 260px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="lang-switch" role="tablist" aria-label="Language">
+    <button class="lang-btn active" data-lang="ja" aria-selected="true">JP</button>
+    <button class="lang-btn" data-lang="en" aria-selected="false">EN</button>
+  </div>
+
+  <header class="head">
+    <div class="title-row">
+      <span class="nose" aria-hidden="true">👃</span>
+      <span data-i18n="title">においたんけん</span>
+    </div>
+    <div class="subtitle" data-i18n="subtitle">4〜8さい・おうちの においを みつけよう</div>
+  </header>
+
+  <section class="mission" id="mission" aria-live="polite">
+    <div class="mission-emoji" id="missionEmoji">🍞</div>
+    <div class="mission-text">
+      <div class="mission-label" data-i18n="todayMission">きょうの ミッション</div>
+      <div class="mission-name" id="missionName">パンの においを みつけよう</div>
+      <div class="mission-hint" data-i18n="missionHint">みつけたら カードを タップ</div>
+    </div>
+  </section>
+
+  <div class="garden-wrap">
+    <div class="garden-label">
+      <span data-i18n="gardenLabel">においの にわ</span>
+      <span class="garden-count" id="gardenCount">0 / 16</span>
+    </div>
+    <div class="garden" id="garden" role="img" aria-label="Smell garden">
+      <div class="empty-msg" id="emptyMsg" data-i18n="emptyMsg">においを みつけると、おはなが さくよ</div>
+    </div>
+  </div>
+
+  <div class="section-label" data-i18n="findLabel">どんな におい？</div>
+  <div class="smells" id="smells"></div>
+
+  <div class="knowledge" id="knowledge">
+    <div class="knowledge-label" data-i18n="didYouKnow">しっていた？</div>
+    <div id="knowledgeText"></div>
+  </div>
+
+  <div class="foot">
+    <div data-i18n="footLine">Pinda Lab · においで せかいを たんけん</div>
+    <button class="reset-btn" id="resetBtn" data-i18n="resetBtn">にわを リセット</button>
+  </div>
+</div>
+
+<!-- Room picker modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-emoji" id="modalEmoji">🍞</div>
+    <div class="modal-title" id="modalTitle">パン</div>
+    <div class="modal-q" data-i18n="modalQ">どこで かいだ？</div>
+    <div class="rooms" id="rooms"></div>
+    <button class="modal-skip" id="modalSkip" data-i18n="modalSkip">わからない</button>
+  </div>
+</div>
+
+<!-- Celebrate flash -->
+<div class="celebrate" id="celebrate"><div class="celebrate-text" id="celebrateText">+1</div></div>
+
+<script>
+// ────────────────────────────────────────────────────────────
+// Smell categories: 16 friendly types
+// ────────────────────────────────────────────────────────────
+const SMELLS = [
+  { ja: 'あまい',     en: 'Sweet',   emoji: '🍯', color: '#f4a261', petal: '#ffc777' },
+  { ja: 'すっぱい',   en: 'Sour',    emoji: '🍋', color: '#f4d03f', petal: '#ffea7c' },
+  { ja: 'スパイシー', en: 'Spicy',   emoji: '🌶️', color: '#e74c3c', petal: '#ff7d6e' },
+  { ja: 'フルーツ',   en: 'Fruity',  emoji: '🍓', color: '#e84393', petal: '#ff8ec0' },
+  { ja: 'はな',       en: 'Floral',  emoji: '🌸', color: '#ff69b4', petal: '#ffb3d6' },
+  { ja: 'もり',       en: 'Woody',   emoji: '🌲', color: '#2d6a4f', petal: '#5fa57e' },
+  { ja: 'せっけん',   en: 'Soapy',   emoji: '🧼', color: '#74b9ff', petal: '#a8d4ff' },
+  { ja: 'ふるい',     en: 'Musty',   emoji: '📚', color: '#8b7355', petal: '#b69b7c' },
+  { ja: 'うみ',       en: 'Sea',     emoji: '🌊', color: '#00cec9', petal: '#5be8e2' },
+  { ja: 'けむい',     en: 'Smoky',   emoji: '🔥', color: '#a26b48', petal: '#cd9572' },
+  { ja: 'かみ',       en: 'Papery',  emoji: '📄', color: '#fdcb6e', petal: '#ffe2a8' },
+  { ja: 'ミルク',     en: 'Milky',   emoji: '🥛', color: '#fff5d8', petal: '#ffffff' },
+  { ja: 'パン',       en: 'Baked',   emoji: '🍞', color: '#f39c12', petal: '#ffc16a' },
+  { ja: 'おちゃ',     en: 'Tea',     emoji: '🍵', color: '#52c98b', petal: '#92e8b8' },
+  { ja: 'つち',       en: 'Earth',   emoji: '🌱', color: '#6b4423', petal: '#9b714b' },
+  { ja: 'しおから',   en: 'Salty',   emoji: '🧂', color: '#bdc3c7', petal: '#e0e4e8' }
+];
+
+const ROOMS = [
+  { ja: 'キッチン',   en: 'Kitchen',  icon: '🍳' },
+  { ja: 'おふろ',     en: 'Bath',     icon: '🛁' },
+  { ja: 'リビング',   en: 'Living',   icon: '🛋️' },
+  { ja: 'ベッド',     en: 'Bedroom',  icon: '🛏️' },
+  { ja: 'にわ',       en: 'Garden',   icon: '🌳' },
+  { ja: 'そと',       en: 'Outside',  icon: '🚶' }
+];
+
+const KNOWLEDGE = {
+  1:  { ja: 'においは、あたまの 「きおく」と とても つよく つながっているよ。あまい においで、 むかしの ことを おもいだすことが あるんだ。',
+        en: 'Smell is deeply tied to memory in your brain. A sweet smell can bring back an old memory in a flash.' },
+  3:  { ja: 'イヌの ハナは ニンゲンの 1万ばい するどいよ！ サメは 1キロメートル さきの ちを かぎ わけられるんだって。',
+        en: 'A dog\'s nose is 10,000× sharper than a human\'s. A shark can smell blood from a kilometer away.' },
+  6:  { ja: 'ゾウの ハナは、においを かぐ ためにも つかうよ。すいせいの アリは、においを たどって ぎょうれつを つくるんだ。',
+        en: 'Elephants use their trunks to smell. Ants follow scent trails to make their long marching lines.' },
+  10: { ja: 'バニラや コーヒーの においは、ほとんどの くにで すきな ひとが おおいんだって。 においの すき・きらいは、 きおくで きまるよ。',
+        en: 'Vanilla and coffee are loved almost everywhere. Whether you like a smell depends on the memories tied to it.' },
+  16: { ja: 'すごい！ あなたは 「においの たんてい」だ。 おうちの においの ちずは、 きみだけの たからもの だね。',
+        en: 'Amazing! You are a true smell detective. Your home\'s smell map is a treasure no one else has.' }
+};
+
+const I18N = {
+  ja: {
+    title: 'においたんけん',
+    subtitle: '4〜8さい・おうちの においを みつけよう',
+    todayMission: 'きょうの ミッション',
+    missionHint: 'みつけたら カードを タップ',
+    gardenLabel: 'においの にわ',
+    findLabel: 'どんな におい？',
+    didYouKnow: 'しっていた？',
+    footLine: 'Pinda Lab · においで せかいを たんけん',
+    resetBtn: 'にわを リセット',
+    emptyMsg: 'においを みつけると、おはなが さくよ',
+    modalQ: 'どこで かいだ？',
+    modalSkip: 'わからない',
+    missionTpl: (name) => `${name}の においを みつけよう`,
+    completeTitle: 'コンプリート！',
+    completeHint: 'ぜんぶ みつけたよ',
+    confirmReset: 'ほんとうに にわを リセット？'
+  },
+  en: {
+    title: 'Nioi Tanken',
+    subtitle: 'Ages 4-8 · Find smells around your home',
+    todayMission: "TODAY'S MISSION",
+    missionHint: 'Tap the card when you find it',
+    gardenLabel: 'Smell Garden',
+    findLabel: 'What kind of smell?',
+    didYouKnow: 'Did you know?',
+    footLine: 'Pinda Lab · Explore the world by smell',
+    resetBtn: 'Reset garden',
+    emptyMsg: 'Find a smell and a flower will bloom',
+    modalQ: 'Where did you smell it?',
+    modalSkip: "Don't know",
+    missionTpl: (name) => `Find a ${name.toLowerCase()} smell!`,
+    completeTitle: 'Complete!',
+    completeHint: 'You found them all',
+    confirmReset: 'Really reset your garden?'
+  }
+};
+
+// ────────────────────────────────────────────────────────────
+// State
+// ────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'nioi-tanken-v1';
+const today = () => new Date().toISOString().slice(0, 10);
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    const s = JSON.parse(raw);
+    if (!Array.isArray(s.logs)) s.logs = [];
+    if (!s.lang) s.lang = navigator.language && navigator.language.startsWith('en') ? 'en' : 'ja';
+    return s;
+  } catch (e) {
+    return defaultState();
+  }
+}
+function defaultState() {
+  return {
+    logs: [],
+    lang: navigator.language && navigator.language.startsWith('en') ? 'en' : 'ja',
+    questDate: '',
+    questIdx: 0,
+    flowerSpots: []
+  };
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+let state = loadState();
+
+// ────────────────────────────────────────────────────────────
+// Rendering
+// ────────────────────────────────────────────────────────────
+const $ = (id) => document.getElementById(id);
+
+function applyI18n() {
+  const dict = I18N[state.lang];
+  document.documentElement.lang = state.lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (dict[k]) el.textContent = dict[k];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const active = b.dataset.lang === state.lang;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+}
+
+function foundSet() {
+  return new Set(state.logs.map(l => l.category));
+}
+
+function pickQuest() {
+  const todayStr = today();
+  if (state.questDate === todayStr && typeof state.questIdx === 'number') return state.questIdx;
+  const found = foundSet();
+  const remaining = SMELLS.map((_, i) => i).filter(i => !found.has(i));
+  const pool = remaining.length ? remaining : SMELLS.map((_, i) => i);
+  // Deterministic per-day pick from pool
+  const seed = todayStr.split('-').reduce((a, p) => a + parseInt(p, 10), 0);
+  const idx = pool[seed % pool.length];
+  state.questDate = todayStr;
+  state.questIdx = idx;
+  saveState();
+  return idx;
+}
+
+function renderMission() {
+  const q = pickQuest();
+  const s = SMELLS[q];
+  const dict = I18N[state.lang];
+  const name = state.lang === 'ja' ? s.ja : s.en;
+  const found = foundSet();
+  if (found.size >= SMELLS.length) {
+    $('missionEmoji').textContent = '🌟';
+    $('missionName').textContent = dict.completeHint;
+    $('mission').querySelector('.mission-label').textContent = dict.completeTitle;
+    return;
+  }
+  $('missionEmoji').textContent = s.emoji;
+  $('missionName').textContent = dict.missionTpl(name);
+  $('mission').querySelector('.mission-label').textContent = dict.todayMission;
+}
+
+function renderSmells() {
+  const wrap = $('smells');
+  wrap.innerHTML = '';
+  const found = foundSet();
+  const quest = state.questIdx;
+  SMELLS.forEach((s, i) => {
+    const el = document.createElement('button');
+    el.className = 'smell';
+    if (found.has(i)) el.classList.add('found');
+    if (i === quest && !found.has(i)) el.classList.add('quest');
+    el.innerHTML = `
+      <span class="smell-emoji">${s.emoji}</span>
+      <span class="smell-name">${state.lang === 'ja' ? s.ja : s.en}</span>
+      ${found.has(i) ? '<span class="found-tick">✓</span>' : ''}
+    `;
+    el.addEventListener('click', () => onSmellTap(i));
+    wrap.appendChild(el);
+  });
+}
+
+function placeFlowerSpot(idx) {
+  // Stable pseudo-random spot per logged flower index
+  const found = foundSet();
+  const ordered = state.logs.map(l => l.category);
+  // try to spread points evenly using Halton-like sequence
+  const k = ordered.indexOf(idx);
+  if (k < 0) return null;
+  const haltonX = halton(k + 1, 2);
+  const haltonY = halton(k + 1, 3);
+  // Reserve top 30% (sky), bottom 5% (margin)
+  const x = 8 + haltonX * 84;          // 8% .. 92%
+  const y = 35 + haltonY * 55;         // 35% .. 90%
+  return { x, y };
+}
+
+function halton(i, b) {
+  let f = 1, r = 0;
+  while (i > 0) { f /= b; r += f * (i % b); i = Math.floor(i / b); }
+  return r;
+}
+
+function flowerSVG(s) {
+  // 5-petal flower: petals + center
+  const petal = s.petal;
+  const ctr = s.color;
+  return `
+    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(30 38)">
+        <rect x="-1.2" y="-2" width="2.4" height="20" fill="#3a7a36" rx="1"/>
+        <path d="M -8 6 Q -3 0 0 4" stroke="#3a7a36" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+      <g transform="translate(30 24)">
+        ${[0, 72, 144, 216, 288].map(a =>
+          `<ellipse cx="0" cy="-12" rx="7" ry="11" fill="${petal}" stroke="${ctr}" stroke-width="1.2" stroke-opacity="0.5" transform="rotate(${a})"/>`
+        ).join('')}
+        <circle r="6.2" fill="${ctr}"/>
+        <circle r="3" fill="#fffbe5" opacity="0.7"/>
+      </g>
+    </svg>`;
+}
+
+function renderGarden() {
+  const garden = $('garden');
+  // Wipe existing flowers
+  garden.querySelectorAll('.flower').forEach(f => f.remove());
+  const empty = $('emptyMsg');
+  empty.classList.toggle('hide', state.logs.length > 0);
+  state.logs.forEach((log, k) => {
+    const haltonX = halton(k + 1, 2);
+    const haltonY = halton(k + 1, 3);
+    const x = 6 + haltonX * 88;
+    const y = 38 + haltonY * 56;
+    const s = SMELLS[log.category];
+    const f = document.createElement('div');
+    f.className = 'flower';
+    f.style.left = x + '%';
+    f.style.top = y + '%';
+    f.style.animationDelay = '0s';
+    f.innerHTML = flowerSVG(s);
+    f.title = (state.lang === 'ja' ? s.ja : s.en);
+    f.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // briefly bounce + show name
+      f.animate([
+        { transform: 'translate(-50%, -100%) scale(1)' },
+        { transform: 'translate(-50%, -100%) scale(1.18) rotate(6deg)' },
+        { transform: 'translate(-50%, -100%) scale(1)' }
+      ], { duration: 320, easing: 'ease-out' });
+    });
+    garden.appendChild(f);
+  });
+  $('gardenCount').textContent = `${foundSet().size} / ${SMELLS.length}`;
+}
+
+function showKnowledge() {
+  const count = foundSet().size;
+  const milestones = [16, 10, 6, 3, 1];
+  const hit = milestones.find(m => m === count);
+  const k = $('knowledge');
+  if (!hit) { k.classList.remove('show'); return; }
+  $('knowledgeText').textContent = KNOWLEDGE[hit][state.lang];
+  k.classList.add('show');
+  // hide after a while if user logs another smell
+}
+
+function celebrate() {
+  const el = $('celebrate');
+  $('celebrateText').textContent = '+1 🌸';
+  el.classList.remove('show');
+  void el.offsetWidth;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1300);
+}
+
+// ────────────────────────────────────────────────────────────
+// Modal
+// ────────────────────────────────────────────────────────────
+let pendingCategory = null;
+
+function openModal(idx) {
+  pendingCategory = idx;
+  const s = SMELLS[idx];
+  $('modalEmoji').textContent = s.emoji;
+  $('modalTitle').textContent = state.lang === 'ja' ? s.ja : s.en;
+  // build rooms
+  const r = $('rooms');
+  r.innerHTML = '';
+  ROOMS.forEach((room, ri) => {
+    const b = document.createElement('button');
+    b.className = 'room';
+    b.innerHTML = `<span class="room-icon">${room.icon}</span><span>${state.lang === 'ja' ? room.ja : room.en}</span>`;
+    b.addEventListener('click', () => commitLog(ri));
+    r.appendChild(b);
+  });
+  $('modalBg').classList.add('show');
+}
+function closeModal() {
+  $('modalBg').classList.remove('show');
+  pendingCategory = null;
+}
+function commitLog(roomIdx) {
+  if (pendingCategory == null) return;
+  const idx = pendingCategory;
+  const found = foundSet();
+  const isNew = !found.has(idx);
+  state.logs.push({ category: idx, room: roomIdx, ts: Date.now() });
+  saveState();
+  closeModal();
+  renderGarden();
+  renderSmells();
+  renderMission();
+  if (isNew) {
+    celebrate();
+    showKnowledge();
+    playChime();
+  }
+}
+
+// ────────────────────────────────────────────────────────────
+// Audio: tiny chime
+// ────────────────────────────────────────────────────────────
+let audioCtx;
+function playChime() {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const now = audioCtx.currentTime;
+    [880, 1320, 1760].forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, now + i * 0.06);
+      gain.gain.linearRampToValueAtTime(0.08, now + i * 0.06 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.06 + 0.4);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(now + i * 0.06);
+      osc.stop(now + i * 0.06 + 0.45);
+    });
+  } catch (e) { /* silent */ }
+}
+
+// ────────────────────────────────────────────────────────────
+// Events
+// ────────────────────────────────────────────────────────────
+function onSmellTap(idx) {
+  openModal(idx);
+}
+$('modalBg').addEventListener('click', (e) => {
+  if (e.target === $('modalBg')) closeModal();
+});
+$('modalSkip').addEventListener('click', () => commitLog(-1));
+
+document.querySelectorAll('.lang-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    state.lang = b.dataset.lang;
+    saveState();
+    applyI18n();
+    renderMission();
+    renderSmells();
+    renderGarden();
+    showKnowledge();
+  });
+});
+
+$('resetBtn').addEventListener('click', () => {
+  if (!confirm(I18N[state.lang].confirmReset)) return;
+  state.logs = [];
+  state.questDate = '';
+  saveState();
+  $('knowledge').classList.remove('show');
+  renderMission();
+  renderSmells();
+  renderGarden();
+});
+
+// ────────────────────────────────────────────────────────────
+// Boot
+// ────────────────────────────────────────────────────────────
+applyI18n();
+renderMission();
+renderSmells();
+renderGarden();
+showKnowledge();
+
+// Service-worker-style offline: this is a single static file, so no extra needed
+</script>
+</body>
+</html>
