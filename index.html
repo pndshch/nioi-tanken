@@ -939,6 +939,23 @@ $('resetBtn').addEventListener('click', () => {
 });
 
 // ────────────────────────────────────────────────────────────
+// Demo mode (?demo=N) — pre-populate N smells for GIF capture
+// ────────────────────────────────────────────────────────────
+(function() {
+  const params = new URLSearchParams(location.search);
+  if (!params.has('demo')) return;
+  const n = Math.max(0, Math.min(SMELLS.length, parseInt(params.get('demo') || '0', 10) || 0));
+  // Deterministic but visually varied order
+  const order = [12, 1, 4, 13, 5, 8, 11, 2, 14, 6, 9, 3, 0, 10, 7, 15];
+  const logs = [];
+  for (let i = 0; i < n; i++) {
+    logs.push({ category: order[i], room: i % 6, ts: Date.now() + i });
+  }
+  state = { logs, lang: params.get('lang') || 'ja', questDate: today(), questIdx: order[n % order.length], flowerSpots: [] };
+  // Don't persist demo state
+})();
+
+// ────────────────────────────────────────────────────────────
 // Boot
 // ────────────────────────────────────────────────────────────
 applyI18n();
